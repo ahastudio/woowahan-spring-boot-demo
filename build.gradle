@@ -14,6 +14,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
 
 jar {
   baseName = 'demo'
@@ -48,4 +51,38 @@ eclipse {
 
 task wrapper(type: Wrapper) {
   gradleVersion = '2.10'
+}
+
+checkstyle {
+    toolVersion = '6.13'
+    configFile = file("${project.rootDir}/config/checkstyle/woowa_checks.xml")
+    sourceSets = [sourceSets.main, sourceSets.test]
+}
+
+checkstyleMain {
+    outputs.upToDateWhen { false }
+}
+
+checkstyleTest {
+    outputs.upToDateWhen { false }
+}
+
+pmd {
+    ruleSets = [
+        "java-basic",
+        "java-braces"
+    ]
+
+    sourceSets = [sourceSets.main, sourceSets.test]
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+findbugs {
+    sourceSets = [sourceSets.main, sourceSets.test]
 }
