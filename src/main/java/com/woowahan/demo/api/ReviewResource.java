@@ -2,6 +2,11 @@ package com.woowahan.demo.api;
 
 import com.woowahan.demo.api.bean.ReviewBean;
 import com.woowahan.demo.domain.Review;
+import com.woowahan.demo.repository.ReviewRepository;
+import com.woowahan.demo.service.ReviewService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +26,15 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class ReviewResource {
 
+    @Autowired
+    ReviewService reviewService;
+
     /**
      * Collection GET.
      */
     @GET
     public Response getList() {
-        Review review = new Review();
-        review.setId(1234L);
-        review.setName("리뷰왕");
-        review.setBody("우왕ㅋ굳ㅋ");
-
-        List<Review> reviews = new ArrayList<Review>();
-        reviews.add(review);
+        List<Review> reviews = reviewService.getList();
 
         return Response.ok(reviews).build();
     }

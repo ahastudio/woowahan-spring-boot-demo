@@ -7,9 +7,12 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import com.woowahan.demo.DemoApplication;
 import com.woowahan.demo.domain.Review;
+import com.woowahan.demo.repository.ReviewRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -27,11 +30,25 @@ import javax.ws.rs.core.Response;
 @WebAppConfiguration
 public class ReviewResourceTest extends RestTest {
 
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+    @Before
+    public void setUp() {
+        Review review = new Review();
+        review.setName("비룡");
+        review.setBody("오늘은 내가 최연소 특급 요리사!");
+
+        reviewRepository.save(review);
+    }
+
     @Test
     public void getList() {
-        String responseBody = target("/reviews").request().get(String.class);
+        Response response = target("/reviews").request().get();
 
-        assertThat(responseBody, containsString("우왕ㅋ굳ㅋ"));
+        assertThat(response.getStatusInfo(), equalTo(Response.Status.OK));
+
+        assertThat(response.readEntity(String.class), containsString("비룡"));
     }
 
     @Test
