@@ -1,8 +1,8 @@
 package com.woowahan.demo.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -15,7 +15,7 @@ public class WelcomeController {
     /**
      * GET / 요청을 처리한다.
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @ResponseBody
     public String index() {
         return "Hello";

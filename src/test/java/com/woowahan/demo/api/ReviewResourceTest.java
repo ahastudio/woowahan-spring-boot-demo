@@ -1,21 +1,17 @@
 package com.woowahan.demo.api;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woowahan.demo.DemoApplication;
 import com.woowahan.demo.domain.Review;
 import com.woowahan.demo.repository.ReviewRepository;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
@@ -25,14 +21,16 @@ import javax.ws.rs.core.Response;
 /**
  * Review REST API Test.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(DemoApplication.class)
-@WebAppConfiguration
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ReviewResourceTest extends RestTest {
 
     @Autowired
     private ReviewRepository reviewRepository;
 
+    /**
+     * Review Fixture 설정.
+     */
     @Before
     public void setUp() {
         Review review = new Review();
@@ -46,9 +44,9 @@ public class ReviewResourceTest extends RestTest {
     public void getList() {
         Response response = target("/reviews").request().get();
 
-        assertThat(response.getStatusInfo(), equalTo(Response.Status.OK));
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
 
-        assertThat(response.readEntity(String.class), containsString("비룡"));
+        assertThat(response.readEntity(String.class)).contains("비룡");
     }
 
     @Test
@@ -62,17 +60,17 @@ public class ReviewResourceTest extends RestTest {
 
         Response response = target("/reviews").request().post(entity);
 
-        assertThat(response.getStatus(), equalTo(201));
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
 
         Review review = response.readEntity(Review.class);
-        assertThat(review.getId(), notNullValue());
-        assertThat(review.getName(), equalTo("루피"));
+        assertThat(review.getId()).isNotNull();
+        assertThat(review.getName()).isEqualTo("루피");
     }
 
     @Test
     public void getDetail() {
         String responseBody = target("/reviews/17").request().get(String.class);
 
-        assertThat(responseBody, containsString("우왕ㅋ굳ㅋ"));
+        assertThat(responseBody).contains("우왕ㅋ굳ㅋ");
     }
 }

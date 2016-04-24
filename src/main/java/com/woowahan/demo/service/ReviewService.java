@@ -16,8 +16,12 @@ import java.util.List;
 @Service
 public class ReviewService {
 
+    private final ReviewRepository reviewRepository;
+
     @Autowired
-    private ReviewRepository reviewRepository;
+    public ReviewService(ReviewRepository reviewRepository) {
+        this.reviewRepository = reviewRepository;
+    }
 
     @Transactional
     public List<Review> getList() {

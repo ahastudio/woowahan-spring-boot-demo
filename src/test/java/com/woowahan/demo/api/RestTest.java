@@ -8,9 +8,10 @@ import org.junit.After;
 import org.junit.Before;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 import java.net.URI;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -18,12 +19,12 @@ import javax.ws.rs.client.WebTarget;
 /**
  * REST API Test Base Class.
  */
-public class RestTest {
+public abstract class RestTest {
 
     private static final String BASE_URI = "http://localhost:9999";
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private ApplicationContext applicationContext;
 
     private HttpServer server;
 
@@ -33,7 +34,7 @@ public class RestTest {
     @Before
     public void startServer() {
         ResourceConfig config = new JerseyConfig();
-        config.property("contextConfig", webApplicationContext);
+        config.property("contextConfig", applicationContext);
         server = GrizzlyHttpServerFactory.createHttpServer(
                 URI.create(BASE_URI), config);
     }
